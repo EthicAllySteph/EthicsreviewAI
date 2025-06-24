@@ -1,3 +1,5 @@
+const https = require('https');
+
 exports.handler = async (event, context) => {
   if (event.httpMethod !== 'POST') {
     return {
@@ -8,38 +10,34 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const { field, country, proposal } = JSON.parse(event.body || '{}');
-    
-    // Simple Claude API test
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 100,
-        messages: [{
-          role: 'user',
-          content: 'Say hello in exactly 5 words'
-        }]
-      })
+    // Test if we can make any external request at all
+    const testResponse = await new Promise((resolve, reject) => {
+      const req = https.request({
+        hostname: 'httpbin.org',
+        path: '/get',
+        method: 'GET'
+      }, (res) => {
+        let data = '';
+        res.on('data', chunk => data += chunk);
+        res.on('end', () => resolve({ status: res.statusCode, data }));
+      });
+      
+      req.on('error', reject);
+      req.setTimeout(5000, () => reject(new Error('Timeout')));
+      req.end();
     });
-
-    const data = await response.json();
-    
-    if (!response.ok) {
-      return {
-        statusCode: response.status,
-        headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: 'Claude API error', details: data })
-      };
-    }
 
     return {
       statusCode: 200,
       headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
-      body: JSON.stringify({ review: data.content[0].text })
+      body: JSON.stringify({ message: 'External request works!', test: testResponse })
     };
+
+  } catch (error) {
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: error.message })
+    };
+  }
+};
