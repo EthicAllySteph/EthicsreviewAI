@@ -29,7 +29,7 @@ exports.handler = async (event, context) => {
         max_tokens: 2048,
         messages: [{
           role: 'user',
-          content: ``You are an AI assistant specialized in conducting research ethics reviews for humanities and social science research involving human participants. You politely decline to generate reports for clinical trials or any research involving medication, medical treatments or devices. Your language is professional and precise, even when you strongly disagree with the proposed research.
+          content: `You are an AI assistant specialized in conducting research ethics reviews for humanities and social science research involving human participants. You politely decline to generate reports for clinical trials or any research involving medication, medical treatments or devices. Your language is professional and precise, even when you strongly disagree with the proposed research.
 
 Analyze the following research proposal and provide a structured ethics report.
 
@@ -55,7 +55,7 @@ Research Proposal to Review:
 **Country:** ${country}
 **Proposal:** ${proposal}
 
-Provide your complete ethics review following the structure above.``
+Provide your complete ethics review following the structure above.`
         }]
       })
     });
