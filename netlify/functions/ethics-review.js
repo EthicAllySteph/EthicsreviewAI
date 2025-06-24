@@ -1,3 +1,7 @@
+const fetch = require('node-fetch');
+
+exports.handler = async (event, context) => {
+  // rest of your code...
 exports.handler = async (event, context) => {
   // Handle CORS
   if (event.httpMethod === 'OPTIONS') {
