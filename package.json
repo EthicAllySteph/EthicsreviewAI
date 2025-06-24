@@ -6,7 +6,7 @@
 
 \"description\": \"AI-powered research ethics review application\",
 
-\"main\": \"server.js\",
+\"main\": \"index.js\",
 
 \"scripts\": {
 
