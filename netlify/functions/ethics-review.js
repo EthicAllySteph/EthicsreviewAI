@@ -1,9 +1,9 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
+export const handler = async (event, context) => {
+ 
 exports.handler = async (event, context) => {
-  // rest of your code...
-exports.handler = async (event, context) => {
-  // Handle CORS
+ 
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
