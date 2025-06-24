@@ -29,20 +29,8 @@ app.post('/api/ethics-review', async (req, res) => {
         if (!field || !country || !proposal) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
-        console.log('Making API call to Claude...');
-        console.log('API Key starts with:', ANTHROPIC_API_KEY?.substring(0, 15));
-        console.log('Request data:', { field, country, proposal: proposal.substring(0, 100) + '...' });
-        
+
         const response = await fetch('https://api.anthropic.com/v1/messages', {
-            console.log('Claude API response status:', response.status);
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.log('Claude API error details:', errorText);
-            return res.status(response.status).json({
-                error: `API Error: ${response.status} ${response.statusText}`,
-                details: errorText
-            });
-        }
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
