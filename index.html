@@ -455,7 +455,7 @@
             document.getElementById('resultsCard').style.display = 'none';
 
             try {
-                const response = await fetch('https://ethicsreviewai-1.onrender.com/api/ethics-review', {
+                const response = await fetch('/.netlify/functions/ethics-review', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
