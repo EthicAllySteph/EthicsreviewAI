@@ -35,8 +35,7 @@ app.post('/api/ethics-review', async (req, res) => {
             headers: {
                 'Content-Type': 'application/json',
                 'x-api-key': ANTHROPIC_API_KEY,
-                'anthropic-version': '2023-06-01'
-            },
+                            },
             body: JSON.stringify({
                 model: 'claude-sonnet-4-20250514',
                 max_tokens: 2048,
