@@ -1,4 +1,5 @@
 exports.handler = async (event, context) => {
+  // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
@@ -11,25 +12,25 @@ exports.handler = async (event, context) => {
   }
 
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { 
+      statusCode: 405, 
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'Method Not Allowed' })
+    };
   }
 
   try {
     const { field, country, proposal } = JSON.parse(event.body);
+    
+    if (!field || !country || !proposal) {
+      return {
+        statusCode: 400,
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({ error: 'Missing required fields' })
+      };
+    }
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2048,
-        messages: [{
-          role: 'user',
-          content: `You are an AI assistant specialized in conducting research ethics reviews for humanities and social science research involving human participants. You politely decline to generate reports for clinical trials or any research involving medication, medical treatments or devices. Your language is professional and precise, even when you strongly disagree with the proposed research.
+    const prompt = `You are an AI assistant specialized in conducting research ethics reviews for humanities and social science research involving human participants. You politely decline to generate reports for clinical trials or any research involving medication, medical treatments or devices. Your language is professional and precise, even when you strongly disagree with the proposed research.
 
 Analyze the following research proposal and provide a structured ethics report.
 
@@ -55,24 +56,54 @@ Research Proposal to Review:
 **Country:** ${country}
 **Proposal:** ${proposal}
 
-Provide your complete ethics review following the structure above.`
+Provide your complete ethics review following the structure above.`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2048,
+        messages: [{
+          role: 'user',
+          content: prompt
         }]
       })
     });
 
+    if (!response.ok) {
+      const errorText = await response.text();
+      return {
+        statusCode: response.status,
+        headers: { 'Access-Control-Allow-Origin': '*' },
+        body: JSON.stringify({
+          error: `API Error: ${response.status} ${response.statusText}`,
+          details: errorText
+        })
+      };
+    }
+
     const data = await response.json();
-    
+    const ethicsReview = data.content[0].text;
+
     return {
       statusCode: 200,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ review: data.content[0].text })
+      body: JSON.stringify({ review: ethicsReview })
     };
 
   } catch (error) {
     return {
       statusCode: 500,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify({ error: error.message })
+      body: JSON.stringify({
+        error: 'Internal server error',
+        details: error.message
+      })
     };
   }
 };
