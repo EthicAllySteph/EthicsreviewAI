@@ -8,6 +8,26 @@ const PORT = process.env.PORT || 3000;
 // HARDCODED API KEY - Replace with your actual API key
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 console.log('API Key loaded:', ANTHROPIC_API_KEY ? 'YES' : 'NO');
+console.log('Making API call to Claude...');
+console.log('API Key starts with:', ANTHROPIC_API_KEY?.substring(0, 10));
+
+const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01'
+    },
+    body: JSON.stringify({
+        // ... your existing body
+    })
+});
+
+console.log('Claude API response status:', response.status);
+if (!response.ok) {
+    const errorText = await response.text();
+    console.log('Claude API error details:', errorText);
+}
 // Middleware
 app.use(cors({
     origin: ['https://radiant-sunshine-56d1ce.netlify.app', 'http://localhost:3000'],
