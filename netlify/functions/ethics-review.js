@@ -21,6 +21,16 @@ exports.handler = async (event, context) => {
 
   try {
     const { field, country, proposal } = JSON.parse(event.body);
+   console.log('API Key available:', !!process.env.ANTHROPIC_API_KEY);
+  console.log('API Key starts with:', process.env.ANTHROPIC_API_KEY?.substring(0, 10));
+  
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return {
+      statusCode: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+      body: JSON.stringify({ error: 'API key not found' })
+    };
+  }
     const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
    const response = await fetch('https://api.anthropic.com/v1/messages', {
   method: 'POST',
