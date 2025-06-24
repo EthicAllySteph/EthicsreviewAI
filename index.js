@@ -6,8 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // HARDCODED API KEY - Replace with your actual API key
-const ANTHROPIC_API_KEY = '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';
-
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 // Middleware
 app.use(cors());
 app.use(express.json());
