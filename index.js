@@ -8,7 +8,10 @@ const PORT = process.env.PORT || 3000;
 // HARDCODED API KEY - Replace with your actual API key
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: ['https://radiant-sunshine-56d1ce.netlify.app', 'http://localhost:3000'],
+    credentials: true
+}));
 app.use(express.json());
 app.use(express.static('public'));
 
