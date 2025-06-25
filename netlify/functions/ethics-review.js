@@ -1,6 +1,12 @@
 exports.handler = async (event, context) => {
-  return {
+  const response = {
     statusCode: 200,
-    body: "Hello World"
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ message: 'Hello from Netlify' })
   };
+  
+  return response;
 };
