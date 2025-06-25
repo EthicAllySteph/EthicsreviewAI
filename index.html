@@ -467,16 +467,29 @@
                     })
                 });
 
-                const data = await response.json();
+                const response = await fetch('/.netlify/functions/ethics-review', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        field: field,
+        country: country,
+        proposal: proposal
+    })
+});
 
-                if (!response.ok) {
-                    throw new Error(data.error || `Server error: ${response.status}`);
-                }
+if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Server error: ${response.status} - ${errorText}`);
+}
 
-                // Show results - hide loading and show results
-                document.getElementById('loadingCard').style.display = 'none';
-                document.getElementById('resultsContent').textContent = data.review;
-                document.getElementById('resultsCard').style.display = 'block';
+const data = await response.json();
+
+// Show results - hide loading and show results
+document.getElementById('loadingCard').style.display = 'none';
+document.getElementById('resultsContent').textContent = data.review;
+document.getElementById('resultsCard').style.display = 'block';
 
             } catch (error) {
                 console.error('Error:', error);
