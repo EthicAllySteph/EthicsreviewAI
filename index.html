@@ -466,3 +466,56 @@
                         country: country,
                         proposal: proposal
                     })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server error: ${response.status} - ${errorText}`);
+                }
+
+                const data = await response.json();
+
+                // Show results - hide loading and show results
+                document.getElementById('loadingCard').style.display = 'none';
+                document.getElementById('resultsContent').textContent = data.review;
+                document.getElementById('resultsCard').style.display = 'block';
+
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loadingCard').style.display = 'none';
+                document.getElementById('mainForm').style.display = 'block';
+
+                let errorMessage = 'An error occurred while processing your request. ';
+                if (error.message.includes('401')) {
+                    errorMessage += 'API authentication error.';
+                } else if (error.message.includes('429')) {
+                    errorMessage += 'API rate limit exceeded. Please try again in a moment.';
+                } else if (error.message.includes('fetch')) {
+                    errorMessage += 'Network error. Please check your internet connection.';
+                } else {
+                    errorMessage += error.message;
+                }
+
+                showError(errorMessage);
+            }
+        });
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 10000);
+        }
+
+        function startNewReview() {
+            document.getElementById('resultsCard').style.display = 'none';
+            document.getElementById('loadingCard').style.display = 'none';
+            document.getElementById('mainForm').style.display = 'block';
+            document.getElementById('ethicsForm').reset();
+        }
+    </script>
+</body>
+</html>
