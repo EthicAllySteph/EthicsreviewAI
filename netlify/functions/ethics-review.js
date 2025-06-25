@@ -42,7 +42,7 @@ exports.handler = async (event, context) => {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 1024,
+        max_tokens: 512,
         messages: [{
           role: 'user',
           content: `You are an AI assistant specialized in conducting research ethics reviews for humanities and social science research involving human participants. You politely decline to generate reports for clinical trials or any research involving medication, medical treatments or devices. Your language is professional and precise, even when you strongly disagree with the proposed research.
