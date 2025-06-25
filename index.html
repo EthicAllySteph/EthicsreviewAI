@@ -455,7 +455,7 @@
             document.getElementById('resultsCard').style.display = 'none';
 
             try {
-                const response = await fetch('https://0f2f1841-5b24-403f-bc6e-2a7856b764f3-00-21g8d4t6ozb55.riker.replit.dev:3000/api/ethics-review', {
+                const response = await fetch('/.netlify/functions/ethics-review', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
