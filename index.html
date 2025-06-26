@@ -31,6 +31,17 @@
             height: auto;
         }
 
+        .beta-badge {
+            background: #ff6b35;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
         .welcome-text {
             margin-bottom: 30px;
             line-height: 1.6;
@@ -47,6 +58,35 @@
         .caution {
             color: red;
             font-weight: bold;
+        }
+
+        .beta-feedback {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #1565c0;
+            text-align: center;
+        }
+
+        .data-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            color: #856404;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .timeout-notice {
+            color: #1D4A7A;
+            padding: 10px 0;
+            margin-top: 10px;
+            font-size: 0.9em;
+            text-align: center;
         }
 
         a {
@@ -256,8 +296,9 @@
     <!-- Main Form Page -->
     <div id="mainPage" class="page-content active">
         <div class="container" id="mainForm">
-            <div class="logo" style="margin-bottom: 0px; display: flex; justify-content: center;">
-                <img src="assets/ethicallylogo3.png" alt="EthicAlly Logo" style="width: 400px; max-width: 90vw;">
+            <div class="logo" style="margin-bottom: 0px; display: flex; justify-content: center; align-items: center;">
+                <img src="/assets/ethicallylogo3.png" alt="EthicAlly Logo" style="width: 400px; max-width: 90vw;">
+                <span class="beta-badge">BETA</span>
             </div>
 
             <div class="welcome-text">
@@ -266,6 +307,13 @@
 
                 <p><span class="caution">CAUTION: EthicAlly is a research app and still under development. It can make mistakes. Always seek ethical advice from your institutional research ethics committee or equivalent.</span></p>
             </div>
+
+            <div class="beta-feedback">
+                <strong>🧪 Beta Testing</strong><br>
+                EthicAlly is currently in beta testing. We're actively improving the system and would love your feedback! Please contact us at <a href="mailto:contact@ethically.info">contact@ethically.info</a> with your experience, suggestions, or any issues you encounter.
+            </div>
+
+
 
             <!-- API key section is now hidden -->
             <div class="api-key">
@@ -356,6 +404,10 @@
                     <textarea id="proposal" required placeholder="Please provide a detailed description of your research proposal, including methodology, participant groups, data collection methods, and any ethical considerations you've already identified..."></textarea>
                 </div>
 
+                <div style="margin-bottom: 20px; color: #1D4A7A; font-size: 14px; line-height: 1.4;">
+                    <strong>Data Processing Notice:</strong> Your research proposal will be sent to Anthropic's Claude AI for analysis. Neither the EthicAlly app nor Anthropic retain your data after generating the review. EthicAlly's data processing is automated - no humans review your proposal. For details on Anthropic's data handling, see their <a href="https://www.anthropic.com/privacy" target="_blank">privacy policy</a>.
+                </div>
+
                 <div class="form-group">
                     <label style="display: flex; align-items: flex-start; font-weight: normal; font-size: 14px; line-height: 1.4;">
                         <input type="checkbox" id="dataConsent" required style="width: auto; margin-right: 10px; margin-top: 2px; flex-shrink: 0;">
@@ -364,6 +416,10 @@
                 </div>
 
                 <button type="submit" id="submitBtn">Generate Ethics Review</button>
+                
+                <div class="timeout-notice">
+                    💡 <strong>Note:</strong> If you do not receive a response, Claude's servers may be busy - please try again in a few minutes.
+                </div>
             </form>
 
             <div id="error" class="error" style="display: none;"></div>
@@ -385,15 +441,6 @@
         </div>
     </div>
 
-    <!-- About Page -->
-    <div id="aboutPage" class="page-content">
-        <div class="container">
-            <button class="back-btn" onclick="showPage('mainPage')">← Back to EthicAlly</button>
-            <h2>About EthicAlly</h2>
-            <p>Content coming soon...</p>
-        </div>
-    </div>
-
     <!-- Privacy Page -->
     <div id="privacyPage" class="page-content">
         <div class="container">
@@ -403,21 +450,11 @@
         </div>
     </div>
 
-    <!-- Contact Page -->
-    <div id="contactPage" class="page-content">
-        <div class="container">
-            <button class="back-btn" onclick="showPage('mainPage')">← Back to EthicAlly</button>
-            <h2>Contact</h2>
-            <p>Content coming soon...</p>
-        </div>
-    </div>
-
     <div class="footer">
         <p>
             <strong>EthicAlly</strong> - Powered by Claude AI • Built for researchers, by researchers<br>
-            <a href="#" onclick="showPage('aboutPage')">About</a> • 
-            <a href="#" onclick="showPage('privacyPage')">Privacy Policy</a> • 
-            <a href="#" onclick="showPage('contactPage')">Contact</a>
+            <a href="mailto:contact@ethically.info">Contact</a> • 
+            <a href="#" onclick="showPage('privacyPage')">Privacy Policy</a>
         </p>
     </div>
 
@@ -433,7 +470,6 @@
 
         document.getElementById('ethicsForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            console.log('Form submitted!'); // Debug line
 
             const field = document.getElementById('field').value;
             const country = document.getElementById('country').value;
